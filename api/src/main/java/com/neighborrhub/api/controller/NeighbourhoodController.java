@@ -9,44 +9,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neighborrhub.api.dto.NeighbourhoodDto;
-import com.neighborrhub.api.repositories.NeighbourhoodRepository;
+import com.neighborrhub.api.service.NeighbourhoodService;
 
 @RestController
 @RequestMapping("/api/neighbourhoods")
 public class NeighbourhoodController {
-    private final NeighbourhoodRepository neighbourhoodRepository;
+    private final NeighbourhoodService neighbourhoodService;
     
-    public NeighbourhoodController(NeighbourhoodRepository neighbourhoodRepository) {
-        this.neighbourhoodRepository = neighbourhoodRepository;
+    public NeighbourhoodController(NeighbourhoodService neighbourhoodService) {
+        this.neighbourhoodService = neighbourhoodService;
     }
 
     @GetMapping
     public List<NeighbourhoodDto> getAll() {
-        return neighbourhoodRepository.findAll()
-            .stream()
-            .map(n -> {
-                NeighbourhoodDto dto = new NeighbourhoodDto();
-                dto.setId(n.getId());
-                dto.setName(n.getName());
-                dto.setCity(n.getCity());
-                dto.setZipcode(n.getZipcode());
-                return dto;
-            })
-            .toList();
+        return neighbourhoodService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<NeighbourhoodDto> getById(@PathVariable Long id) {
-        return neighbourhoodRepository.findById(id)
-                .map(n -> {
-                    NeighbourhoodDto dto = new NeighbourhoodDto();
-                    dto.setId(n.getId());
-                    dto.setName(n.getName());
-                    dto.setCity(n.getCity());
-                    dto.setZipcode(n.getZipcode());
-                    return ResponseEntity.ok(dto);
-                })
+        return neighbourhoodService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-    
+    }   
 }
