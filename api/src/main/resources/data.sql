@@ -3,7 +3,7 @@ INSERT INTO app_neighbourhood (name, city, zipcode) VALUES
 ('Montmartre', 'Paris', '75018'),
 ('Belleville', 'Paris', '75020'),
 ('La Croix-Rousse', 'Lyon', '69004')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (name, zipcode) DO NOTHING;
 
 -- Rôles
 INSERT INTO app_role (name) VALUES

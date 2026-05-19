@@ -29,10 +29,10 @@ public class Ad {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime creation_date;
+    private LocalDateTime creationDate;
 
     @Column(nullable = true)
-    private LocalDateTime update_date;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name="user_id")
