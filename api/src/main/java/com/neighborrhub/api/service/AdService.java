@@ -1,0 +1,78 @@
+package com.neighborrhub.api.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.neighborrhub.api.dto.AdDto;
+import com.neighborrhub.api.dto.CreateAdDto;
+import com.neighborrhub.api.entity.Ad;
+import com.neighborrhub.api.entity.User;
+import com.neighborrhub.api.repositories.AdRepository;
+
+@Service
+public class AdService {
+    private final AdRepository adRepository;
+
+    public AdService(AdRepository adRepository) {
+        this.adRepository = adRepository;
+    }
+
+    public List<AdDto> findAll() {
+        return adRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+    
+    public Optional<AdDto> findById(Long id) {
+        return adRepository.findById(id)
+                .map(this::toDto);
+    }
+
+    public AdDto create(CreateAdDto createDto, User currentUser) {
+        Ad ad = new Ad();
+        ad.setTitle(createDto.getTitle());
+        ad.setContent(createDto.getContent());
+        ad.setUser(currentUser);
+        ad.setCreationDate(LocalDateTime.now());
+        return toDto(adRepository.save(ad));
+    }
+
+    public Optional<AdDto> update(Long id, CreateAdDto updateDto) {
+        return adRepository.findById(id)
+                .map(ad -> {
+                    ad.setTitle(updateDto.getTitle());
+                    ad.setContent(updateDto.getContent());
+                    ad.setUpdateDate(LocalDateTime.now());
+                    return toDto(adRepository.save(ad));
+                });
+    }
+    
+    public boolean delete(Long id) {
+        if (!adRepository.existsById(id))
+            return false;
+
+        adRepository.deleteById(id);
+        return true;
+    }
+    
+
+    private AdDto toDto(Ad ad) {
+        AdDto dto = new AdDto();
+        dto.setId(ad.getId());
+        dto.setTitle(ad.getTitle());
+        dto.setContent(ad.getContent());
+        dto.setCreationDate(ad.getCreationDate());
+        dto.setUpdateDate(ad.getUpdateDate());
+
+        AdDto.AuthorDto authorDto = new AdDto.AuthorDto();
+        authorDto.setId(ad.getUser().getId());
+        authorDto.setName(ad.getUser().getName());
+        dto.setAuthor(authorDto);
+
+        return dto;
+    }
+}
