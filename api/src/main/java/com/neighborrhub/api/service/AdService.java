@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.neighborrhub.api.dto.AdDto;
 import com.neighborrhub.api.dto.CreateAdDto;
+import com.neighborrhub.api.dto.UserSummaryDto;
 import com.neighborrhub.api.entity.Ad;
 import com.neighborrhub.api.entity.User;
 import com.neighborrhub.api.repositories.AdRepository;
@@ -37,7 +38,6 @@ public class AdService {
         ad.setTitle(createDto.getTitle());
         ad.setContent(createDto.getContent());
         ad.setUser(currentUser);
-        ad.setCreationDate(LocalDateTime.now());
         return toDto(adRepository.save(ad));
     }
 
@@ -68,7 +68,7 @@ public class AdService {
         dto.setCreationDate(ad.getCreationDate());
         dto.setUpdateDate(ad.getUpdateDate());
 
-        AdDto.AuthorDto authorDto = new AdDto.AuthorDto();
+        UserSummaryDto authorDto = new UserSummaryDto();
         authorDto.setId(ad.getUser().getId());
         authorDto.setName(ad.getUser().getName());
         dto.setAuthor(authorDto);

@@ -11,11 +11,5 @@ public class AdDto {
     private String content;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
-    private AuthorDto author;
-
-    @Data
-    public static class AuthorDto {
-        private Long id;
-        private String name;
-    }
+    private UserSummaryDto author;
 }
