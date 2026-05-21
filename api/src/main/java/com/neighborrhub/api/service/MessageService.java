@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.neighborrhub.api.dto.CreateMessageDto;
@@ -19,10 +20,13 @@ import com.neighborrhub.api.repositories.UserRepository;
 public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public MessageService(MessageRepository messageRepository, UserRepository userRepository) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository, 
+            SimpMessagingTemplate messagingTemplate) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public List<MessageDto> getAllReceived(Long userId) {
@@ -50,7 +54,14 @@ public class MessageService {
         message.setSentAt(LocalDateTime.now());
         message.setReceiver(receiver);
 
-        return toDto(messageRepository.save(message));
+        MessageDto result = toDto(messageRepository.save(message)); 
+
+        messagingTemplate.convertAndSendToUser(
+            receiver.getMail(), 
+            "/queue/messages", 
+            result);
+
+        return result;
     }
     
     protected MessageDto toDto(Message message) {
