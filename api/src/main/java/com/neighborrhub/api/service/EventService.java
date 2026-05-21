@@ -3,6 +3,7 @@ package com.neighborrhub.api.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.neighborrhub.api.dto.CreateEventDto;
@@ -13,6 +14,7 @@ import com.neighborrhub.api.dto.UserSummaryDto;
 import com.neighborrhub.api.entity.Event;
 import com.neighborrhub.api.entity.Neighbourhood;
 import com.neighborrhub.api.entity.User;
+import com.neighborrhub.api.exception.BusinessException;
 import com.neighborrhub.api.repositories.EventRepository;
 import com.neighborrhub.api.repositories.NeighbourhoodRepository;
 
@@ -47,7 +49,7 @@ public class EventService {
         event.setCapacityMax(createDto.getCapacityMax());
 
         Neighbourhood neighbourhood = neighbourhoodRepository.findById(createDto.getNeighbourhoodId())
-                .orElseThrow(() -> new RuntimeException("Quartier introuvable"));
+                .orElseThrow(() -> new BusinessException("Quartier introuvable", HttpStatus.NOT_FOUND));
 
         event.setNeighbourhood(neighbourhood);
         event.setUser(currentUser);
@@ -57,7 +59,7 @@ public class EventService {
 
     public Optional<EventSummaryDto> update(Long id, CreateEventDto updateDto) {
         Neighbourhood neighbourhood = neighbourhoodRepository.findById(updateDto.getNeighbourhoodId())
-                .orElseThrow(() -> new RuntimeException("Quartier introuvable"));
+                .orElseThrow(() -> new BusinessException("Quartier introuvable", HttpStatus.NOT_FOUND));
 
         return eventRepository.findById(id)
                 .map(event -> {

@@ -3,6 +3,7 @@ package com.neighborrhub.api.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.neighborrhub.api.dto.CreateRsvpDto;
@@ -12,6 +13,7 @@ import com.neighborrhub.api.entity.Event;
 import com.neighborrhub.api.entity.Rsvp;
 import com.neighborrhub.api.entity.RsvpStatus;
 import com.neighborrhub.api.entity.User;
+import com.neighborrhub.api.exception.BusinessException;
 import com.neighborrhub.api.repositories.EventRepository;
 import com.neighborrhub.api.repositories.RsvpRepository;
 
@@ -39,17 +41,17 @@ public class RsvpService {
 
     public RsvpResponseDto create(Long eventId, User currentUser, CreateRsvpDto createDto) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Evénement introuvable"));
+                .orElseThrow(() -> new BusinessException("Evénement introuvable", HttpStatus.NOT_FOUND));
 
         if (event.getCapacityMax() != null) {
             long currentCount = rsvpRepository.countByEventIdAndStatus(eventId, RsvpStatus.CONFIRMED);
             if (currentCount >= event.getCapacityMax()) {
-                throw new RuntimeException("Evénement complet");
+                throw new BusinessException("Evénement complet", HttpStatus.CONFLICT);
             }
         }
 
         if (rsvpRepository.existsByEventIdAndUserId(eventId, currentUser.getId())) {
-            throw new RuntimeException("Déjà inscrit à cet événement");
+            throw new BusinessException("Déjà inscrit à cet événement", HttpStatus.BAD_REQUEST);
         }
 
         Rsvp rsvp = new Rsvp();
@@ -62,7 +64,7 @@ public class RsvpService {
 
     public Optional<RsvpResponseDto> update(Long eventId, User currentUser, CreateRsvpDto updateDto) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Evénement introuvable"));
+                .orElseThrow(() -> new BusinessException("Evénement introuvable", HttpStatus.NOT_FOUND));
 
         return rsvpRepository.findByEventIdAndUserId(eventId, currentUser.getId())
                 .map(rsvp -> {
@@ -72,13 +74,14 @@ public class RsvpService {
                         long confirmedCount = rsvpRepository.countByEventIdAndStatus(eventId, RsvpStatus.CONFIRMED);
 
                         if (confirmedCount >= event.getCapacityMax()) {
-                            throw new RuntimeException("Evénement complet");
-                        }
-
-                        if (updateDto.getStatus() != null) {
-                            rsvp.setStatus(updateDto.getStatus());
+                            throw new BusinessException("Evénement complet", HttpStatus.CONFLICT);
                         }
                     }
+
+                    if (updateDto.getStatus() != null) {
+                        rsvp.setStatus(updateDto.getStatus());
+                    }
+
                     return toDto(rsvpRepository.save(rsvp));
                 });
     }

@@ -4,11 +4,14 @@ import com.neighborrhub.api.dto.LoginDto;
 import com.neighborrhub.api.dto.RegisterDto;
 import com.neighborrhub.api.entity.Role;
 import com.neighborrhub.api.entity.User;
+import com.neighborrhub.api.exception.BusinessException;
 import com.neighborrhub.api.repositories.NeighbourhoodRepository;
 import com.neighborrhub.api.repositories.RoleRepository;
 import com.neighborrhub.api.repositories.UserRepository;
 import com.neighborrhub.api.service.JwtService;
 import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,7 +61,7 @@ public class AuthController {
 
         // Assigne le rôle USER par défaut
         Role role = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Rôle introuvable"));
+                .orElseThrow(() -> new BusinessException("Rôle introuvable", HttpStatus.NOT_FOUND));
         user.setRoles(Set.of(role));
 
         // Assigne le quartier si fourni
