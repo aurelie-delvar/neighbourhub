@@ -3,6 +3,7 @@ package com.neighborrhub.api.dto;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -12,7 +13,7 @@ public class CreateEventDto {
 
     private String description;
 
-    @NotBlank(message = "Veuillez entrer une date de début")
+    @NotNull(message = "Veuillez entrer une date de début")
     private LocalDateTime startsAt;
 
     @NotBlank(message = "Veuillez entrer un endroit")

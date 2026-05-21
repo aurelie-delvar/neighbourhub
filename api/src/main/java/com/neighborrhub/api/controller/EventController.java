@@ -30,12 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/events")
 public class EventController {
     private final RsvpService rsvpService;
-    private final RsvpRepository rsvpRepository;
     private final EventService eventService;
 
-    public EventController(EventService eventService, RsvpRepository rsvpRepository, RsvpService rsvpService) {
+    public EventController(EventService eventService, RsvpService rsvpService) {
         this.eventService = eventService;
-        this.rsvpRepository = rsvpRepository;
         this.rsvpService = rsvpService;
     }
 
