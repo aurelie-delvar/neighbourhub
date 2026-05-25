@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import { AuthResponse } from "../types";
+import type { AuthResponse } from "../types/index.ts";
 
 export default function LoginPage() {
 
@@ -30,6 +30,31 @@ export default function LoginPage() {
         }
     } 
 
-    
-    return <div>Login</div>
+
+    return (
+        <div>
+            <h1>Connexion</h1>
+
+            { error && <p style={{ color: 'red' }}>{ error }</p> }
+            
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Email</label>
+                    <input type="email" value={mail} onChange={(e) => setMail(e.target.value)} required />
+                </div>
+
+                <div>
+                    <label>Mot de passe</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                </div>
+
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Connexion...' : 'Se connecter'}
+                </button>
+            </form>
+
+            <p>
+                Pas encore de compte ? <Link to="/register">S'inscrire</Link>
+            </p>
+        </div>);
 }
