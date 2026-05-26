@@ -3,6 +3,12 @@ export interface UserSummary {
     name: string;
 }
 
+export interface User {
+    id: number;
+    name: string;
+    mail: string;
+}
+
 export interface Ad {
     id: number;
     title: string;
