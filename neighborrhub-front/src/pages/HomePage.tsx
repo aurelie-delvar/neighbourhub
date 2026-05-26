@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import type { Ad } from "../types"
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HomePage() {
     const [ads, setAds] = useState<Ad[]>([]);
@@ -54,5 +54,7 @@ export default function HomePage() {
                     </div>                    
                 )}
             </div>
+
+            <Link to="/ad/create">Créer une annonce</Link>
         </div>);
 }
