@@ -39,6 +39,10 @@ export default function AdDetailPage() {
         }
     };
 
+    const handleUpdate = async () => {
+        navigate(`/ad/form/${id}`);
+    };
+
     if (isLoading) return <p>Chargement en cours...</p>;
     
     return (
@@ -56,7 +60,7 @@ export default function AdDetailPage() {
             {currentUser && ad && currentUser.id === ad.author.id &&
                 <>
                     <button type="button" onClick={handleDelete}>Supprimer</button>
-                    <button>Modifier</button>
+                    <button type="button" onClick={handleUpdate}>Modifier</button>
                 </>
             }
         </>

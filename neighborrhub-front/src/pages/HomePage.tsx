@@ -32,7 +32,7 @@ export default function HomePage() {
     };
 
     const goToDetails = (id: number) => {
-        navigate(`/ad/details/${id}`);
+        navigate(`/ads/${id}`);
     };
 
     if (loading) return <p>Chargement...</p>;

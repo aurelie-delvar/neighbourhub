@@ -5,8 +5,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import type { ReactNode } from 'react';
-import CreateAdPage from './pages/CreateAdPage';
 import AdDetailPage from './pages/AdDetailPage';
+import AdFormPage from './pages/AdFormPage';
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -25,12 +25,17 @@ function App() {
               <HomePage />
             </PrivateRoute>
           } />
-          <Route path="/ad/create" element={
+          <Route path="/ad/form" element={
             <PrivateRoute>
-              <CreateAdPage />
+              <AdFormPage />
             </PrivateRoute>
           } />
-          <Route path="/ad/details/:id" element={
+          <Route path="/ad/form/:id" element={
+            <PrivateRoute>
+              <AdFormPage />
+            </PrivateRoute>
+          } />
+          <Route path="/ads/:id" element={
             <PrivateRoute>
               <AdDetailPage />
             </PrivateRoute>
