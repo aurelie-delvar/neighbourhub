@@ -31,6 +31,10 @@ export default function HomePage() {
         navigate('/');
     };
 
+    const goToDetails = (id: number) => {
+        navigate(`/ad/details/${id}`);
+    };
+
     if (loading) return <p>Chargement...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
@@ -45,7 +49,7 @@ export default function HomePage() {
 
             <div>
                 {ads.map(ad => 
-                    <div key={ad.id}>
+                    <div key={ad.id} onClick={() => goToDetails(ad.id)}>
                         <h5>{ad.title}</h5>
                         <p>{ad.content}</p>
                         <p>{ad.author.name} - {new Date(ad.creationDate).toLocaleDateString('fr-FR')}</p>
