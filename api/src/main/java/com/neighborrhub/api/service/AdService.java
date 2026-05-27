@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.neighborrhub.api.dto.AdDto;
@@ -11,6 +12,7 @@ import com.neighborrhub.api.dto.CreateAdDto;
 import com.neighborrhub.api.dto.UserSummaryDto;
 import com.neighborrhub.api.entity.Ad;
 import com.neighborrhub.api.entity.User;
+import com.neighborrhub.api.exception.BusinessException;
 import com.neighborrhub.api.repositories.AdRepository;
 
 @Service
@@ -51,12 +53,15 @@ public class AdService {
                 });
     }
     
-    public boolean delete(Long id) {
-        if (!adRepository.existsById(id))
-            return false;
+    public void delete(Long id, User currentUser) {
+        Ad ad = adRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Annonce introuvable", HttpStatus.NOT_FOUND));
+
+        if (!ad.getUser().getId().equals(currentUser.getId())) {
+            throw new BusinessException("Non autorisé", HttpStatus.FORBIDDEN);
+        }
 
         adRepository.deleteById(id);
-        return true;
     }
     
 

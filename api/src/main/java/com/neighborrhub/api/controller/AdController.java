@@ -55,8 +55,8 @@ public class AdController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if(!adService.delete(id)) return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal User currentUser) {
+        adService.delete(id, currentUser);
         return ResponseEntity.noContent().build();
     }
 }
