@@ -43,14 +43,18 @@ public class AdService {
         return toDto(adRepository.save(ad));
     }
 
-    public Optional<AdDto> update(Long id, CreateAdDto updateDto) {
-        return adRepository.findById(id)
-                .map(ad -> {
-                    ad.setTitle(updateDto.getTitle());
-                    ad.setContent(updateDto.getContent());
-                    ad.setUpdateDate(LocalDateTime.now());
-                    return toDto(adRepository.save(ad));
-                });
+    public AdDto update(Long id, CreateAdDto updateDto, User currentUser) {
+        Ad ad = adRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Annonce introuvable", HttpStatus.NOT_FOUND));
+
+        if (!ad.getUser().getId().equals(currentUser.getId())) {
+            throw new BusinessException("Non autorisé", HttpStatus.FORBIDDEN);
+        }
+
+        ad.setTitle(updateDto.getTitle());
+        ad.setContent(updateDto.getContent());
+        ad.setUpdateDate(LocalDateTime.now());
+        return toDto(adRepository.save(ad));
     }
     
     public void delete(Long id, User currentUser) {

@@ -48,10 +48,8 @@ public class AdController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdDto> update(@PathVariable Long id, @Valid @RequestBody CreateAdDto updateDto) {
-        return adService.update(id, updateDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AdDto> update(@PathVariable Long id, @Valid @RequestBody CreateAdDto updateDto, @AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(adService.update(id, updateDto, currentUser));
     }
     
     @DeleteMapping("/{id}")
