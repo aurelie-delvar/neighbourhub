@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function EventsFormPage() {
     const [title, setTitle] = useState('');
@@ -11,6 +11,26 @@ export default function EventsFormPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { id } = useParams();
+    const isEditing = !!id;    
+
+    useEffect(() => {
+        if (isEditing) {
+            const fetchEvent = async () => {
+                try {
+                    const response = await api.get(`/events/${id}`);
+                    setTitle(response.data.title);
+                    setDescription(response.data.description);
+                    setStartsAt(response.data.startsAt);
+                    setLocation(response.data.location);
+                    setCapacityMax(response.data.capacityMax);                    
+                } catch (error) {
+                    setError('Il y a eu une erreur lors de la récupération de l\'événement'); 
+                }
+            }
+            fetchEvent();
+        }
+    }, [id]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -26,7 +46,11 @@ export default function EventsFormPage() {
         };
 
         try {
-            await api.post('/events', event);
+            if (!isEditing) {
+                await api.post('/events', event);
+            } else {
+                await api.put(`/events/${id}`, event);
+            }
             navigate('/events');
         } catch (error) {
             setError(`Il y a eu une erreur : ${error}`);
@@ -39,6 +63,7 @@ export default function EventsFormPage() {
 
     return (
         <>
+            <h1>{ isEditing ? 'Modifier' : 'Créer' } un événement</h1>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Titre</label>
@@ -78,7 +103,11 @@ export default function EventsFormPage() {
                     />  
                 </div>
                 
-                <button type="submit" disabled={isLoading}>{ isLoading ? 'Création en cours...' : 'Créer'}</button>
+                <button
+                    type="submit"
+                    disabled={isLoading}>
+                    {isLoading ? 'En cours...' : isEditing ? 'Modifier' : 'Créer'}
+                </button>
             </form>
         </>
     );

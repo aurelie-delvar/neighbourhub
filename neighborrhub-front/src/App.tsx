@@ -52,6 +52,11 @@ function App() {
               <EventsFormPage />
             </PrivateRoute>
           } />
+          <Route path="/events/form/:id" element={
+            <PrivateRoute>
+              <EventsFormPage />
+            </PrivateRoute>
+          }/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
