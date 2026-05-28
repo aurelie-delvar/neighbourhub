@@ -60,10 +60,7 @@ public class EventService {
         return toSummaryDto(eventRepository.save(event));
     }
 
-    public Optional<EventSummaryDto> update(Long id, CreateEventDto updateDto) {
-        Neighbourhood neighbourhood = neighbourhoodRepository.findById(updateDto.getNeighbourhoodId())
-                .orElseThrow(() -> new BusinessException("Quartier introuvable", HttpStatus.NOT_FOUND));
-
+    public Optional<EventSummaryDto> update(Long id, CreateEventDto updateDto, User currentUser) {
         return eventRepository.findById(id)
                 .map(event -> {
                     event.setTitle(updateDto.getTitle());
@@ -71,7 +68,7 @@ public class EventService {
                     event.setStartsAt(updateDto.getStartsAt());
                     event.setLocation(updateDto.getLocation());
                     event.setCapacityMax(updateDto.getCapacityMax());
-                    event.setNeighbourhood(neighbourhood);
+                    event.setNeighbourhood(currentUser.getNeighbourhood());
                     return toSummaryDto(eventRepository.save(event));
                 });
     }

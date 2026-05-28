@@ -62,8 +62,8 @@ public class EventController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<EventSummaryDto> update(@PathVariable Long id, @Valid @RequestBody CreateEventDto updateDto) {
-        return eventService.update(id, updateDto)
+    public ResponseEntity<EventSummaryDto> update(@PathVariable Long id, @Valid @RequestBody CreateEventDto updateDto, @AuthenticationPrincipal User currentUser) {
+        return eventService.update(id, updateDto, currentUser)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
