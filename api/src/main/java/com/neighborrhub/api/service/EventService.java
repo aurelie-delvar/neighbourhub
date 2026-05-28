@@ -54,11 +54,7 @@ public class EventService {
         event.setStartsAt(createDto.getStartsAt());
         event.setLocation(createDto.getLocation());
         event.setCapacityMax(createDto.getCapacityMax());
-
-        Neighbourhood neighbourhood = neighbourhoodRepository.findById(createDto.getNeighbourhoodId())
-                .orElseThrow(() -> new BusinessException("Quartier introuvable", HttpStatus.NOT_FOUND));
-
-        event.setNeighbourhood(neighbourhood);
+        event.setNeighbourhood(currentUser.getNeighbourhood());
         event.setUser(currentUser);
 
         return toSummaryDto(eventRepository.save(event));
