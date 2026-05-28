@@ -36,7 +36,17 @@ export interface Event {
     createdAt: string;
     neighbourhood: Neighbourhood;
     creator: UserSummary;
+    rsvps: Rsvp[];
 }
+
+export interface Rsvp {
+    id: number;
+    status: RsvpStatus;
+    userId: number;
+    eventId: number;
+}
+
+export type RsvpStatus = 'CONFIRMED' | 'MAYBE' | 'DECLINED';
 
 export interface Message {
     id: number;
