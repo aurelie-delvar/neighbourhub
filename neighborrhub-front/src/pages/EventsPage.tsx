@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import type { Event } from "../types";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 export default function EventsPage() {
     const [events, setEvents] = useState<Event[]>([]);
@@ -31,18 +32,20 @@ export default function EventsPage() {
         <div>
             {error && <p>{error}</p>}
 
+            <h1>Evénements du quartier : {events[0].neighbourhood.name} ({events[0].neighbourhood.zipcode}, {events[0].neighbourhood.city})</h1>
+
             {events.map(e => 
                 <div key={e.id}>
                     <h1>{e.title}</h1>
                     <p>{e.description}</p>
                     <p>Le {new Date(e.startsAt).toLocaleDateString('fr-FR')}</p>
                     <p> à {e.location}</p>
-                    <p>{e.neighbourhood.name}</p>
-                    <p>{e.neighbourhood.zipcode} {e.neighbourhood.city}</p>
                     <p>Evénement organisé par <span>{e.creator.name}</span></p>
                     <p>Nombre maximal de participants : {e.capacityMax ?? 'Illimitée'}</p>
                 </div>
             )}
+
+            <Link to="/events/form">Créer un événement</Link>
         </div>
     );
 }
