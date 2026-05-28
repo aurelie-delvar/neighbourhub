@@ -42,6 +42,12 @@ public class EventController {
         return eventService.findAll();
     }
 
+    @GetMapping("/neighbourhood/{id}")
+    public List<EventSummaryDto> getAllByNeighbourhood(@PathVariable Long id) {
+        return eventService.findAllByNeighbourhoodId(id);
+    }
+    
+
     @GetMapping("/{id}")
     public ResponseEntity<EventDetailsDto> getById(@PathVariable Long id) {
         return eventService.findById(id)

@@ -35,6 +35,13 @@ public class EventService {
                 .toList();
     }
 
+    public List<EventSummaryDto> findAllByNeighbourhoodId(Long id) {
+        return eventRepository.findByNeighbourhoodId(id)
+                .stream()
+                .map(this::toSummaryDto)
+                .toList();
+    }
+
     public Optional<EventDetailsDto> findById(Long id) {
         return eventRepository.findById(id)
                 .map(this::toDetailsDto);

@@ -23,6 +23,7 @@ public class UserController {
         dto.setId(user.getId());
         dto.setMail(user.getMail());
         dto.setName(user.getName());
+        dto.setNeighbourhoodId(user.getNeighbourhood().getId());
         return dto;
     }
 }
