@@ -9,6 +9,7 @@ import AdDetailPage from './pages/AdDetailPage';
 import AdFormPage from './pages/AdFormPage';
 import EventsPage from './pages/EventsPage';
 import EventsFormPage from './pages/EventsFormPage';
+import EventDetailPage from './pages/EventDetailPage';
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -45,6 +46,11 @@ function App() {
           <Route path="/events" element={
             <PrivateRoute>
               <EventsPage />
+            </PrivateRoute>
+          } />
+          <Route path="/events/:id" element={
+            <PrivateRoute>
+              <EventDetailPage />
             </PrivateRoute>
           } />
           <Route path="/events/form" element={
