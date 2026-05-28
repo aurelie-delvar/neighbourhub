@@ -60,5 +60,6 @@ export default function HomePage() {
             </div>
 
             <Link to="/ad/create">Créer une annonce</Link>
+            <Link to="/events">Voir les événements de mon quartier</Link>
         </div>);
 }

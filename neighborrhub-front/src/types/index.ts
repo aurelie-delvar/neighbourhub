@@ -7,6 +7,7 @@ export interface User {
     id: number;
     name: string;
     mail: string;
+    neighbourhoodId: number;
 }
 
 export interface Ad {
@@ -33,7 +34,7 @@ export interface Event {
     location: string;
     capacityMax: number | null;
     createdAt: string;
-    neighbourhhod: Neighbourhood;
+    neighbourhood: Neighbourhood;
     creator: UserSummary;
 }
 
