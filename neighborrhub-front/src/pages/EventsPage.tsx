@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import type { Event } from "../types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import EventCard from "../components/EventCard";
 
 export default function EventsPage() {
     const [events, setEvents] = useState<Event[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { currentUser } = useAuth();
-    const navigate = useNavigate();
  
     useEffect(() => {
         const fetchEvents = async () => {
@@ -27,10 +27,6 @@ export default function EventsPage() {
         fetchEvents();
     }, [currentUser]);
 
-    const goToDetails = (id: number) => {
-        navigate(`/events/${id}`);
-    };
-
     if (isLoading) return <p>Chargement...</p>;
 
     return (
@@ -40,13 +36,10 @@ export default function EventsPage() {
             <h1>Evénements du quartier : {events[0].neighbourhood.name} ({events[0].neighbourhood.zipcode}, {events[0].neighbourhood.city})</h1>
 
             {events.map(e => 
-                <div key={e.id} onClick={() => goToDetails(e.id)}>
-                    <h1>{e.title}</h1>
-                    <p>Le {new Date(e.startsAt).toLocaleDateString('fr-FR')}</p>
-                    <p> à {e.location}</p>
-                    <p>Evénement organisé par <span>{e.creator.name}</span></p>
-                    <p>Nombre maximal de participants : {e.capacityMax ?? 'Illimitée'}</p>
-                </div>
+                <EventCard
+                    key={e.id}
+                    event={e}
+                />
             )}
 
             <Link to="/events/form">Créer un événement</Link>
